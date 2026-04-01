@@ -4,7 +4,7 @@
   "description": "Kos dan kontrakan nyaman di Sibuhuan Padang Lawas dengan fasilitas lengkap",
   "start_url": "/",
   "display": "standalone",
-  "background_color": "#5d4037",
+  "background_color": "#f5f5f5",
   "theme_color": "#5d4037",
   "orientation": "portrait-primary",
   "scope": "/",
