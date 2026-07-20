@@ -3,7 +3,7 @@
 
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
   <meta name="description"
     content="Kos Hafiz Ikpos kos dan kontrakan di Sibuhuan, Padang Lawas. Kamar nyaman, lokasi strategis dekat MAN 1 & pusat kota, fasilitas lengkap. Hubungi WhatsApp untuk cek kamar kos Sibuhuan.">
   <meta name="keywords"
@@ -163,7 +163,11 @@
       </div>
       <button type="button" class="mobile-menu-btn" id="mobileMenuBtn" aria-label="Buka menu navigasi"
         aria-expanded="false" aria-controls="mainNav">
-        <i class="fas fa-bars" aria-hidden="true"></i>
+        <span class="hamburger" aria-hidden="true">
+          <span class="hamburger-line"></span>
+          <span class="hamburger-line"></span>
+          <span class="hamburger-line"></span>
+        </span>
       </button>
       <nav id="mainNav" role="navigation" aria-label="Navigasi utama">
         <ul>
@@ -177,19 +181,17 @@
       </nav>
     </div>
   </header>
+  <div class="nav-overlay" id="navOverlay" aria-hidden="true"></div>
 
   <main id="main-content">
     <section class="hero" id="home" aria-labelledby="hero-heading">
       <div class="hero-particles" id="heroParticles" aria-hidden="true"></div>
       <div class="hero-inner">
-        <br>
-        <br><br><br>
         <p class="hero-badge"><i class="fas fa-map-marker-alt" aria-hidden="true"></i> Sibuhuan · Padang Lawas ·
           Sumatera Utara</p>
         <h1 id="hero-heading">Kos di Sibuhuan yang Nyaman untuk Pelajar, Mahasiswa, &amp; Profesional</h1>
         <p class="hero-lead">Mencari <strong>kos atau kontrakan di Sibuhuan</strong>?
           Kos Hafiz Ikpos menawarkan hunian bersih, aman, dan strategis dekat sekolah, perkantoran, dan jalan utama.</p>
-        <br><br><br>
         <div class="hero-actions">
           <a href="https://wa.me/6285163089473" target="_blank" class="whatsapp-cta" rel="noopener noreferrer"
             aria-label="Chat WhatsApp Kos Hafiz Ikpos">
@@ -297,15 +299,6 @@
             <div class="facility-content">
               <h3>AC <span class="coming-soon-badge">Segera</span></h3>
               <p>Unit AC sedang dipersiapkan untuk kenyamanan suhu ruangan.</p>
-            </div>
-          </article>
-          <article class="facility-card coming-soon">
-            <div class="facility-icon" aria-hidden="true">
-              <i class="fas fa-tv"></i>
-            </div>
-            <div class="facility-content">
-              <h3>TV kabel <span class="coming-soon-badge">Segera</span></h3>
-              <p>TV dan layanan kabel direncanakan untuk hiburan di kamar.</p>
             </div>
           </article>
           <article class="facility-card coming-soon">
@@ -422,18 +415,6 @@
   </main>
 
   <footer>
-    <style>
-      /* Inline style to add space between FontAwesome icons and text in the footer */
-      .footer-col i.fas {
-        margin-right: 0.6em;
-        vertical-align: middle;
-      }
-
-      /* Optionally, add space above the footer if it's too close to preceding content */
-      footer {
-        margin-top: 2.5rem;
-      }
-    </style>
     <div class="footer-container">
       <div class="footer-col">
         <h3>Kos dan Kontrakan Hafiz Ikpos</h3>

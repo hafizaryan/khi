@@ -12,38 +12,82 @@ function throttle(fn, wait) {
 // Mobile menu
 const mobileMenuBtn = document.getElementById("mobileMenuBtn");
 const mainNav = document.getElementById("mainNav");
+const navOverlay = document.getElementById("navOverlay");
+const siteHeader = document.querySelector("header");
+
+function syncHeaderHeight() {
+  if (!siteHeader) return;
+  const height = siteHeader.offsetHeight;
+  document.documentElement.style.setProperty("--header-h", `${height}px`);
+}
+
+function setMenuOpen(isOpen) {
+  if (!mainNav || !mobileMenuBtn) return;
+
+  mainNav.classList.toggle("active", isOpen);
+  navOverlay?.classList.toggle("active", isOpen);
+  if (navOverlay) navOverlay.setAttribute("aria-hidden", (!isOpen).toString());
+
+  mobileMenuBtn.setAttribute("aria-expanded", isOpen.toString());
+  mobileMenuBtn.setAttribute(
+    "aria-label",
+    isOpen ? "Tutup menu navigasi" : "Buka menu navigasi"
+  );
+
+  document.body.classList.toggle("menu-open", isOpen);
+  document.body.style.overflow = isOpen ? "hidden" : "";
+}
 
 function closeMobileMenu() {
-  if (!mainNav || !mobileMenuBtn) return;
-  mainNav.classList.remove("active");
-  mobileMenuBtn.innerHTML = '<i class="fas fa-bars" aria-hidden="true"></i>';
-  mobileMenuBtn.setAttribute("aria-expanded", "false");
-  mobileMenuBtn.setAttribute("aria-label", "Buka menu navigasi");
-  document.body.style.overflow = "";
+  setMenuOpen(false);
+}
+
+function openMobileMenu() {
+  syncHeaderHeight();
+  setMenuOpen(true);
+}
+
+function toggleMobileMenu() {
+  const willOpen = !mainNav?.classList.contains("active");
+  if (willOpen) openMobileMenu();
+  else closeMobileMenu();
 }
 
 if (mobileMenuBtn && mainNav) {
+  syncHeaderHeight();
+
   mobileMenuBtn.addEventListener("click", (e) => {
     e.preventDefault();
     e.stopPropagation();
-
-    const isActive = mainNav.classList.toggle("active");
-    mobileMenuBtn.innerHTML = isActive
-      ? '<i class="fas fa-times" aria-hidden="true"></i>'
-      : '<i class="fas fa-bars" aria-hidden="true"></i>';
-    mobileMenuBtn.setAttribute("aria-expanded", isActive.toString());
-    mobileMenuBtn.setAttribute(
-      "aria-label",
-      isActive ? "Tutup menu navigasi" : "Buka menu navigasi"
-    );
-    document.body.style.overflow = isActive ? "hidden" : "";
+    toggleMobileMenu();
   });
 
-  document.addEventListener("click", (e) => {
-    if (!mainNav.contains(e.target) && !mobileMenuBtn.contains(e.target)) {
-      if (mainNav.classList.contains("active")) closeMobileMenu();
+  navOverlay?.addEventListener("click", () => {
+    closeMobileMenu();
+  });
+
+  mainNav.querySelectorAll("a").forEach((link) => {
+    link.addEventListener("click", () => {
+      closeMobileMenu();
+    });
+  });
+
+  document.addEventListener("keydown", (e) => {
+    if (e.key === "Escape" && mainNav.classList.contains("active")) {
+      closeMobileMenu();
+      mobileMenuBtn.focus();
     }
   });
+
+  window.addEventListener(
+    "resize",
+    throttle(() => {
+      syncHeaderHeight();
+      if (window.innerWidth > 768 && mainNav.classList.contains("active")) {
+        closeMobileMenu();
+      }
+    }, 100)
+  );
 }
 
 // Smooth scroll for in-page anchors
@@ -100,7 +144,7 @@ function createHeroParticles() {
   const container = document.getElementById("heroParticles");
   if (!container || prefersReducedMotion) return;
 
-  const particleCount = 18;
+  const particleCount = window.innerWidth < 768 ? 8 : 18;
   for (let i = 0; i < particleCount; i++) {
     const particle = document.createElement("div");
     particle.className = "hero-particle";
@@ -244,6 +288,7 @@ function initHeadingLines() {
 // --- Tilt Effect on Facility Cards (mouse hover) ---
 function initCardTilt() {
   if (prefersReducedMotion) return;
+  if (window.matchMedia("(hover: none)").matches) return;
 
   document.querySelectorAll(".facility-card").forEach((card) => {
     card.addEventListener("mousemove", (e) => {
