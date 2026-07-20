@@ -90,6 +90,189 @@ window.addEventListener(
   }, 100)
 );
 
+// ===== ANIMATION SYSTEM =====
+
+// Check if user prefers reduced motion
+const prefersReducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+
+// --- Hero Floating Particles ---
+function createHeroParticles() {
+  const container = document.getElementById("heroParticles");
+  if (!container || prefersReducedMotion) return;
+
+  const particleCount = 18;
+  for (let i = 0; i < particleCount; i++) {
+    const particle = document.createElement("div");
+    particle.className = "hero-particle";
+
+    // Randomize particle properties
+    const size = Math.random() * 6 + 3;
+    const alpha = Math.random() * 0.3 + 0.1;
+    const duration = Math.random() * 8 + 6;
+    const delay = Math.random() * 5;
+    const tx = (Math.random() - 0.5) * 200;
+    const ty = -(Math.random() * 200 + 50);
+    const left = Math.random() * 100;
+    const top = Math.random() * 100;
+
+    particle.style.cssText = `
+      --size: ${size}px;
+      --alpha: ${alpha};
+      --dur: ${duration}s;
+      --delay: ${delay}s;
+      --tx: ${tx}px;
+      --ty: ${ty}px;
+      left: ${left}%;
+      top: ${top}%;
+    `;
+
+    container.appendChild(particle);
+  }
+}
+
+// --- Scroll Reveal (IntersectionObserver) ---
+function initScrollReveal() {
+  if (prefersReducedMotion) {
+    // Show all elements immediately
+    document
+      .querySelectorAll(".reveal, .reveal-left, .reveal-right, .reveal-scale")
+      .forEach((el) => el.classList.add("revealed"));
+    document
+      .querySelectorAll(".facility-card")
+      .forEach((el) => el.classList.add("revealed"));
+    document
+      .querySelectorAll("footer .footer-container")
+      .forEach((el) => el.classList.add("revealed"));
+    return;
+  }
+
+  const revealObserver = new IntersectionObserver(
+    (entries) => {
+      entries.forEach((entry) => {
+        if (entry.isIntersecting) {
+          entry.target.classList.add("revealed");
+          revealObserver.unobserve(entry.target);
+        }
+      });
+    },
+    {
+      threshold: 0.12,
+      rootMargin: "0px 0px -60px 0px",
+    }
+  );
+
+  // Observe all reveal elements
+  document
+    .querySelectorAll(".reveal, .reveal-left, .reveal-right, .reveal-scale")
+    .forEach((el) => revealObserver.observe(el));
+
+  // Footer reveal
+  document
+    .querySelectorAll("footer .footer-container")
+    .forEach((el) => revealObserver.observe(el));
+}
+
+// --- Staggered Facility Cards ---
+function initFacilityCardStagger() {
+  const cards = document.querySelectorAll(".facility-card");
+  if (!cards.length) return;
+
+  if (prefersReducedMotion) {
+    cards.forEach((card) => card.classList.add("revealed"));
+    return;
+  }
+
+  // Assign stagger delays
+  cards.forEach((card, i) => {
+    card.style.setProperty("--stagger-delay", `${i * 0.08}s`);
+  });
+
+  const cardObserver = new IntersectionObserver(
+    (entries) => {
+      entries.forEach((entry) => {
+        if (entry.isIntersecting) {
+          // Reveal all cards when the grid becomes visible
+          const grid = entry.target.closest(".facilities-grid");
+          if (grid) {
+            grid.querySelectorAll(".facility-card").forEach((card) => {
+              card.classList.add("revealed");
+            });
+          }
+          cardObserver.unobserve(entry.target);
+        }
+      });
+    },
+    {
+      threshold: 0.1,
+      rootMargin: "0px 0px -40px 0px",
+    }
+  );
+
+  // Observe the first card as a trigger
+  if (cards[0]) {
+    cardObserver.observe(cards[0]);
+  }
+}
+
+// --- Animated Line Under Section Headings ---
+function initHeadingLines() {
+  const headings = document.querySelectorAll(".section-title h2");
+  if (!headings.length) return;
+
+  if (prefersReducedMotion) {
+    headings.forEach((h) => h.classList.add("line-visible"));
+    return;
+  }
+
+  const lineObserver = new IntersectionObserver(
+    (entries) => {
+      entries.forEach((entry) => {
+        if (entry.isIntersecting) {
+          entry.target.classList.add("line-visible");
+          lineObserver.unobserve(entry.target);
+        }
+      });
+    },
+    {
+      threshold: 0.5,
+    }
+  );
+
+  headings.forEach((h) => lineObserver.observe(h));
+}
+
+// --- Tilt Effect on Facility Cards (mouse hover) ---
+function initCardTilt() {
+  if (prefersReducedMotion) return;
+
+  document.querySelectorAll(".facility-card").forEach((card) => {
+    card.addEventListener("mousemove", (e) => {
+      const rect = card.getBoundingClientRect();
+      const x = e.clientX - rect.left;
+      const y = e.clientY - rect.top;
+      const centerX = rect.width / 2;
+      const centerY = rect.height / 2;
+      const rotateX = ((y - centerY) / centerY) * -4;
+      const rotateY = ((x - centerX) / centerX) * 4;
+
+      card.style.transform = `translateY(-6px) scale(1.02) perspective(800px) rotateX(${rotateX}deg) rotateY(${rotateY}deg)`;
+    });
+
+    card.addEventListener("mouseleave", () => {
+      card.style.transform = "";
+    });
+  });
+}
+
+// --- Initialize all animations ---
+document.addEventListener("DOMContentLoaded", () => {
+  createHeroParticles();
+  initScrollReveal();
+  initFacilityCardStagger();
+  initHeadingLines();
+  initCardTilt();
+});
+
 // Service worker (PWA)
 if ("serviceWorker" in navigator) {
   window.addEventListener("load", () => {
