@@ -1,27 +1,27 @@
 {
-  "name": "Kos Hafiz Ikpos",
+  "name": "Kos dan Kontrakan Hafiz Ikpos",
   "short_name": "Kos Hafiz",
-  "description": "Kos dan kontrakan nyaman di Sibuhuan Padang Lawas dengan fasilitas lengkap",
+  "description": "Kos dan kontrakan modern di Sibuhuan Padang Lawas dengan fasilitas lengkap dan siap huni",
   "start_url": "/",
   "display": "standalone",
-  "background_color": "#f5f5f5",
-  "theme_color": "#5d4037",
+  "background_color": "#ffffff",
+  "theme_color": "#1e1b4b",
   "orientation": "portrait-primary",
   "scope": "/",
   "lang": "id",
   "categories": ["lodging", "accommodation"],
   "icons": [
     {
-      "src": "public/about.jpg",
+      "src": "/favicon.jpg",
       "sizes": "192x192",
       "type": "image/jpeg",
-      "purpose": "any maskable"
+      "purpose": "any"
     },
     {
-      "src": "public/about.jpg",
+      "src": "/favicon.jpg",
       "sizes": "512x512",
       "type": "image/jpeg",
-      "purpose": "any maskable"
+      "purpose": "any"
     }
   ]
 }

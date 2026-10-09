@@ -1,0 +1,5 @@
+User-agent: *
+Allow: /
+
+# Sitemap location
+Sitemap: https://kosdisibuhuan-koshafizikpos.netlify.app/sitemap.xml
