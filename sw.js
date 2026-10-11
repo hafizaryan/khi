@@ -1,35 +1,31 @@
 // Service Worker for Kos Hafiz Ikpos Website
-const CACHE_NAME = 'kos-hafiz-v1';
+const CACHE_NAME = 'kos-hafiz-v2';
 const urlsToCache = [
   '/',
   '/index.html',
   '/styles.css',
   '/index.js',
   '/public/about.jpg',
-  '/public/image.png',
-  'https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap',
-  'https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css'
+  '/public/icon.svg'
 ];
 
 // Install Service Worker
 self.addEventListener('install', (event) => {
   event.waitUntil(
     caches.open(CACHE_NAME)
-      .then((cache) => {
-        return cache.addAll(urlsToCache);
-      })
+      .then((cache) => cache.addAll(urlsToCache))
+      .then(() => self.skipWaiting())
   );
 });
 
 // Fetch event
 self.addEventListener('fetch', (event) => {
-  event.respondWith(
-    caches.match(event.request)
-      .then((response) => {
-        // Return cached version or fetch from network
-        return response || fetch(event.request);
-      })
-  );
+  if (event.request.method !== 'GET') return;
+  if (event.request.mode === 'navigate') {
+    event.respondWith(fetch(event.request).catch(() => caches.match('/index.html')));
+    return;
+  }
+  event.respondWith(caches.match(event.request).then((response) => response || fetch(event.request)));
 });
 
 // Activate event - Clean up old caches
@@ -44,6 +40,6 @@ self.addEventListener('activate', (event) => {
           }
         })
       );
-    })
+    }).then(() => self.clients.claim())
   );
 });
